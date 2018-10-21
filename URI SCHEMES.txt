@@ -1,0 +1,62 @@
+
+
+
+<activity android:name="ShareActivity">
+    <!-- filter for sending text; accepts SENDTO action with sms URI schemes -->
+    <intent-filter>
+        <action android:name="android.intent.action.SENDTO"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:scheme="sms" />
+        <data android:scheme="smsto" />
+    </intent-filter>
+    <!-- filter for sending text or images; accepts SEND action and text or image data -->
+    <intent-filter>
+        <action android:name="android.intent.action.SEND"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <data android:mimeType="image/*"/>
+        <data android:mimeType="text/plain"/>
+    </intent-filter>
+</activity>
+
+--------------------------------------------------------------------------------------
+
+FOR CALL
+-------
+
+ Intent intent = new Intent(Intent.ACTION_DIAL);
+
+
+For Gallery
+----------
+
+Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://media/internal/images/media"));
+                try {
+                    context.startActivity(intent);
+                } catch (ActivityNotFoundException eee){
+                    try {
+                        intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+                    } catch (Exception err){
+                        Toast.makeText(context, "This app not supported in your device", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+For sms
+-------
+
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(ctx);
+                Intent lunchIntent;
+                if (defaultSmsPackageName != null) {
+                    launchIntent = pm.getLaunchIntentForPackage(defaultSmsPackageName);
+                } else {
+                    String SMS_MIME_TYPE = "vnd.android-dir/mms-sms";
+                    launchIntent = new Intent(Intent.ACTION_MAIN);
+                    launchIntent.setType(SMS_MIME_TYPE);
+                }
+            } else {
+                String SMS_MIME_TYPE = "vnd.android-dir/mms-sms";
+                launchIntent = new Intent(Intent.ACTION_MAIN);
+                launchIntent.setType(SMS_MIME_TYPE);
+            }
+
